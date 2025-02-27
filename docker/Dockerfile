@@ -1,5 +1,5 @@
 ARG REF \
-    REPOSITORY="lbormann/darts-caller"
+    REPOSITORY="peschi90/darts-caller"
 
 FROM --platform=${BUILDPLATFORM} alpine:latest AS build
 

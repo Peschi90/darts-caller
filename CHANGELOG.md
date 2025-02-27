@@ -1,3 +1,8 @@
+## 0.0.0
+- change repo to Peschi90
+- change docker image to peschi90
+
+
 ## 2.14.0
 
 - add argument -ROVP --remove_old_voice_packs (default '0')

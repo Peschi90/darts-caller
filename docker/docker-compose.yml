@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   darts-caller:
-    image: lbormann/darts-caller
+    image: peschi90/darts-caller
     container_name: darts-caller
     restart: unless-stopped
     ports:
@@ -15,7 +15,7 @@ services:
       AUTODARTS_PASSWORD: '' #Your autodarts password
       AUTODARTS_BOARD_ID: '' #Your autodarts board id
 
-      #optional settings, leave them empty if you don't want to use them. For explanations see https://github.com/lbormann/darts-caller
+      #optional settings, leave them empty if you don't want to use them. For explanations see https://github.com/peschi90/darts-caller
       CALLER_VOLUME:
       CALLER:
       RANDOM_CALLER:
