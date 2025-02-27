@@ -26,7 +26,7 @@ jobs:
     - name: Output Release URL File
       run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
     - name: Save Release URL File for publish
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: release_url
         path: release_url.txt
@@ -69,7 +69,7 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
 
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
@@ -85,7 +85,7 @@ jobs:
       run: ${{matrix.CMD_BUILD}}
 
     - name: Load Release URL File from release job
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v4
       with:
         name: release_url
 
