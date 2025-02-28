@@ -1663,9 +1663,35 @@ def process_match_x01(m):
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 1:
         isGameFinished = False
 
+        dart1Thrown = {
+            "event": "dart1-thrown",
+            "player": currentPlayerName,
+            "playerIsBot": str(currentPlayerIsBot),
+            "game": {
+                "mode": variant,
+                "pointsLeft": str(remainingPlayerScore),
+                "dartNumber": "1",
+                "dartValue": points,        
+            }
+        }
+        broadcast(dart1Thrown)
+
     # Check for 2. Dart
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 2:
         isGameFinished = False
+
+        dart2Thrown = {
+            "event": "dart2-thrown",
+            "player": currentPlayerName,
+            "playerIsBot": str(currentPlayerIsBot),
+            "game": {
+                "mode": variant,
+                "pointsLeft": str(remainingPlayerScore),
+                "dartNumber": "2",
+                "dartValue": points,        
+            }
+        }
+        broadcast(dart2Thrown)
 
     # Check for 3. Dart - Score-call
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 3:
