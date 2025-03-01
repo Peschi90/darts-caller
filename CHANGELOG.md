@@ -1,5 +1,9 @@
 ## 0.0.0b10
 - message for every single dart to darts-WLED
+- calculate 3 dart for message
+
+## 0.0.0b10
+- message for every single dart to darts-WLED
 - calculate 2 dart for message
 
 ## 0.0.0
