@@ -1,3 +1,7 @@
+## 0.0.0b10
+- message for every single dart to darts-WLED
+- calculate 2 dart for message
+
 ## 0.0.0
 - change repo to Peschi90
 - change docker image to peschi90

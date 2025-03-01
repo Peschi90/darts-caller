@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.0b9'
+VERSION = '0.0.0b10'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1288,6 +1288,7 @@ def process_match_x01(m):
     global currentMatchPlayers
     global isGameFinished
     global lastPoints
+    global dart1score
     
     variant = m['variant']
     players = m['players']
@@ -1688,7 +1689,7 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "2",
-                "dartValue": points - dart1score,        
+                "dartValue": str(int(points) - int(dart1score)),        
             }
         }
         broadcast(dart2Thrown)
