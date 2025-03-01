@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.0b8'
+VERSION = '0.0.0b9'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1662,7 +1662,7 @@ def process_match_x01(m):
     # Check for 1. Dart
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 1:
         isGameFinished = False
-
+        dart1score = points
         dart1Thrown = {
             "event": "dart1-thrown",
             "player": currentPlayerName,
@@ -1687,8 +1687,8 @@ def process_match_x01(m):
             "game": {
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
-                "dartNumber": "1",
-                "dartValue": score,        
+                "dartNumber": "2",
+                "dartValue": points - dart1score,        
             }
         }
         broadcast(dart2Thrown)
