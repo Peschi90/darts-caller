@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.0b7'
+VERSION = '0.0.0b8'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1687,8 +1687,8 @@ def process_match_x01(m):
             "game": {
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
-                "dartNumber": "2",
-                "dartValue": points,        
+                "dartNumber": "1",
+                "dartValue": score,        
             }
         }
         broadcast(dart2Thrown)
