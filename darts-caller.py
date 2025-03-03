@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.0b12'
+VERSION = '0.0.0b13'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1086,6 +1086,22 @@ def receive_local_board_address():
         boardManagerAddress = None
         ppe('Fetching local-board-address failed', e)
 
+def receive_takeout_detection():
+    # get takoutstatus out of api
+    try:
+        takeoutStatus
+
+        if takeoutStatus == None:
+            res = requests.get(AUTODARTS_BOARDS_URL + AUTODART_USER_BOARD_ID, headers={'Authorization': 'Bearer ' + kc.access_token})
+            takeoutStatus = res.json()['status']
+            
+            broadcast(takeoutStatus)
+            ppi('Board status: ' + takeoutStatus)
+            
+    except Exception as e:
+        takeoutStatus = None
+        ppe('Fetching takout Status failed', e)
+
 def listen_to_match(m, ws):
     global currentMatch
     global currentMatchHost
@@ -1726,6 +1742,7 @@ def process_match_x01(m):
             }
         }
         broadcast(dartsThrown)
+        receive_takeout_detection()
 
         if currentPlayerIsBot == False or CALL_BOT_ACTIONS:
             if CALL_EVERY_DART == 0 or CALL_EVERY_DART_TOTAL_SCORE == True:
