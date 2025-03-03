@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.1b1'
+VERSION = '0.0.1b2'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1088,12 +1088,17 @@ def receive_local_board_address():
 
 def receive_takeout_detection():
     # get takoutstatus out of api
+    global takeoutStatus
+    takeoutStatus = None
+    ppi('Takeout Status: function called')
     try:
-        global takeoutStatus
-
+        ppi('Takeout Status: start try')
         if takeoutStatus == None:
+            ppi('Takeout Status: == None')
             takeout_value_res = requests.get(AUTODARTS_BOARDS_URL + AUTODART_USER_BOARD_ID, headers={'Authorization': 'Bearer ' + kc.access_token})
+            # ppi('Takeout Status: ' + takeout_value_res)
             takeout_value = takeout_value_res.json()['state']['status']
+            ppi('Takeout Status: Takeout Value after json' + takeout_value)
             if takeout_value != None and takeout_value != '':  
                 takeoutStatus = takeout_value
                 ppi('Takeout Status: ' + takeoutStatus)
@@ -1101,7 +1106,7 @@ def receive_takeout_detection():
                 takeoutStatus = None
                 ppi('Takeout Status: UNKNOWN') 
             
-            broadcast({"event": "takeout-status", "status": takeoutStatus})
+        broadcast({"event": "takeout-status", "status": takeoutStatus})
             
     except Exception as e:
         takeoutStatus = None

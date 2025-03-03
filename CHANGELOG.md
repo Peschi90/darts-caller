@@ -1,3 +1,8 @@
+
+## 0.0.1b2
+- takeout status bugfix
+- implement debug messages for takeout
+
 ## 0.0.1b1
 - takeout status bugfix
 
