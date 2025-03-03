@@ -1,3 +1,7 @@
+## 0.0.0b16
+- takeout status bugfix
+
+
 ## 0.0.0b15
 - set matchshot sound to wait for last true
 - takeout status bugfix

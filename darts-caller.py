@@ -1093,7 +1093,7 @@ def receive_takeout_detection():
 
         if takeoutStatus == None:
             res = requests.get(AUTODARTS_BOARDS_URL + AUTODART_USER_BOARD_ID, headers={'Authorization': 'Bearer ' + kc.access_token})
-            takeoutStatus = res.json()['status']
+            takeoutStatus = res.json()['state']['status']
             
             broadcast(takeoutStatus)
             ppi('Board status: ' + takeoutStatus)
