@@ -48,6 +48,7 @@ class AutodartsKeycloakClient:
     def __get_token(self):
         self.__set_token(self.kc.token(self.username, self.password))
         if self.debug:
+            print("Access Token", self.access_token)
             print("Getting token", self.expires_at, self.refresh_expires_at)
 
     def __refresh_token(self):

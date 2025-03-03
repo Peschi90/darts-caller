@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.0b11'
+VERSION = '0.0.0b12'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -902,7 +902,7 @@ def start_board():
     try:
         res = requests.put(boardManagerAddress + '/api/detection/start')
         # res = requests.put(boardManagerAddress + '/api/start')
-        # ppi(res)
+        ppi(res)
     except Exception as e:
         ppe('Start board failed', e)
 
@@ -910,14 +910,14 @@ def stop_board():
     try:    
         res = requests.put(boardManagerAddress + '/api/detection/stop')
         # res = requests.put(boardManagerAddress + '/api/stop')
-        # ppi(res)
+        ppi(res)
     except Exception as e:
         ppe('stop board failed', e)
 
 def reset_board():
     try:
         res = requests.post(boardManagerAddress + '/api/reset')
-        # ppi(res)
+        ppi(res)
     except Exception as e:
         ppe('Reset board failed', e)
 
@@ -939,7 +939,7 @@ def get_player_average(user_id, variant = 'x01', limit = '100'):
     try:
         res = requests.get(AUTODARTS_USERS_URL + user_id + "/stats/" + variant + "?limit=" + limit, headers={'Authorization': 'Bearer ' + kc.access_token})
         m = res.json()
-        # ppi(m)
+        ppi(m)
         return m['average']['average']
     except Exception as e:
         ppe('Receive player-stats failed', e)
@@ -1071,6 +1071,7 @@ def receive_local_board_address():
             if board_ip != None and board_ip != '':  
                 boardManagerAddress = 'http://' + board_ip
                 ppi('Board-address: ' + boardManagerAddress) 
+                ppi('API ACCESS KEY: ' + kc.access_token)
             else:
                 boardManagerAddress = None
                 ppi('Board-address: UNKNOWN') 
