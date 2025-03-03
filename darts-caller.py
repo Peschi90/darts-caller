@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.0b14'
+VERSION = '0.0.0b15'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1089,7 +1089,7 @@ def receive_local_board_address():
 def receive_takeout_detection():
     # get takoutstatus out of api
     try:
-        takeoutStatus
+        global takeoutStatus
 
         if takeoutStatus == None:
             res = requests.get(AUTODARTS_BOARDS_URL + AUTODART_USER_BOARD_ID, headers={'Authorization': 'Bearer ' + kc.access_token})
@@ -1497,7 +1497,7 @@ def process_match_x01(m):
             }
         broadcast(matchWon)
 
-        if play_sound_effect('matchshot') == False:
+        if play_sound_effect('matchshot', True) == False:
             play_sound_effect('gameshot')
 
         if CALL_CURRENT_PLAYER >= 1:

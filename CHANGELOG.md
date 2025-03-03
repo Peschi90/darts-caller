@@ -1,3 +1,7 @@
+## 0.0.0b15
+- set matchshot sound to wait for last true
+- takeout status bugfix
+
 ## 0.0.0b14
 - implement takout detection from board api. Just message send atm
 
