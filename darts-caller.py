@@ -1092,9 +1092,9 @@ def receive_takeout_detection():
     takeoutStatus = None
     ppi('Takeout Status: function called')
     try:
-        ppi('Takeout Status: start try')
+        # ppi('Takeout Status: start try')
         if takeoutStatus == None:
-            ppi('Takeout Status: == None')
+            # ppi('Takeout Status: == None')
             takeout_value_res = requests.get(AUTODARTS_BOARDS_URL + AUTODART_USER_BOARD_ID, headers={'Authorization': 'Bearer ' + kc.access_token})
             # ppi('Takeout Status: ' + takeout_value_res)
             takeout_value = takeout_value_res.json()['state']['status']
@@ -1106,7 +1106,7 @@ def receive_takeout_detection():
                 takeoutStatus = None
                 ppi('Takeout Status: UNKNOWN') 
             
-        broadcast({"event": "takeout-status", "status": takeoutStatus})
+        broadcast({"event":takeoutStatus})
             
     except Exception as e:
         takeoutStatus = None
