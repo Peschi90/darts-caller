@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.1b3'
+VERSION = '0.0.1b4'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1691,6 +1691,7 @@ def process_match_x01(m):
     
     # Check for 1. Dart
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 1:
+        receive_takeout_detection()
         isGameFinished = False
         dart1score = points
         dart1Thrown = {
@@ -1701,13 +1702,15 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "1",
-                "dartValue": points,        
+                "dartValue": points, 
+                "Takeout": takeoutStatus,        
             }
         }
         broadcast(dart1Thrown)
 
     # Check for 2. Dart
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 2:
+        receive_takeout_detection()
         isGameFinished = False
         dart2score = str(int(points) - int(dart1score))
         dart2Thrown = {
@@ -1718,13 +1721,15 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "2",
-                "dartValue": dart2score,        
+                "dartValue": dart2score, 
+                "Takeout": takeoutStatus,        
             }
         }
         broadcast(dart2Thrown)
 
     # Check for 3. Dart - Score-call
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 3:
+        receive_takeout_detection()
         isGameFinished = False
         dart3score = str(int(points) - int(dart1score) - int(dart2score))
         dart3Thrown = {
@@ -1735,11 +1740,11 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "3",
-                "dartValue": dart3score,        
+                "dartValue": dart3score, 
+                "Takeout": takeoutStatus,        
             }
         }
         broadcast(dart3Thrown)
-
         dartsThrown = {
             "event": "darts-thrown",
             "player": currentPlayerName,
@@ -1748,11 +1753,12 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "3",
-                "dartValue": points,        
+                "dartValue": points, 
+                "Takeout": takeoutStatus,       
             }
         }
         broadcast(dartsThrown)
-        receive_takeout_detection()
+        
 
         if currentPlayerIsBot == False or CALL_BOT_ACTIONS:
             if CALL_EVERY_DART == 0 or CALL_EVERY_DART_TOTAL_SCORE == True:
