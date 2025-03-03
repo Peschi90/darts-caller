@@ -1,3 +1,6 @@
+## 0.0.1b1
+- takeout status bugfix
+
 ## 0.0.0b16
 - takeout status bugfix
 
