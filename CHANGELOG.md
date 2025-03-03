@@ -1,4 +1,4 @@
-## 0.0.0b13
+## 0.0.0b14
 - implement takout detection from board api. Just message send atm
 
 ## 0.0.0b12
