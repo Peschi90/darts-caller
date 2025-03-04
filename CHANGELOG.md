@@ -1,3 +1,6 @@
+## 0.1.0
+- Implement Takoutmessages after every Thrown dart for WLED
+
 ## 0.0.1b4
 - takeout status bugfix
 - implement debug messages for takeout inside Darts-Thrown message 

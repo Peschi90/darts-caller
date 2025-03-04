@@ -58,7 +58,7 @@ main_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(main_directory)
 
 
-VERSION = '0.0.1b4'
+VERSION = '0.1.0'
 
 
 DEFAULT_EMPTY_PATH = ''
@@ -1086,11 +1086,12 @@ def receive_local_board_address():
         boardManagerAddress = None
         ppe('Fetching local-board-address failed', e)
 
+# Get Takeout Status from board to display it on WLED
 def receive_takeout_detection():
     # get takoutstatus out of api
     global takeoutStatus
     takeoutStatus = None
-    ppi('Takeout Status: function called')
+   # ppi('Takeout Status: function called')
     try:
         # ppi('Takeout Status: start try')
         if takeoutStatus == None:
@@ -1098,7 +1099,7 @@ def receive_takeout_detection():
             takeout_value_res = requests.get(AUTODARTS_BOARDS_URL + AUTODART_USER_BOARD_ID, headers={'Authorization': 'Bearer ' + kc.access_token})
             # ppi('Takeout Status: ' + takeout_value_res)
             takeout_value = takeout_value_res.json()['state']['status']
-            ppi('Takeout Status: Takeout Value after json' + takeout_value)
+           # ppi('Takeout Status: Takeout Value after json: ' + takeout_value)
             if takeout_value != None and takeout_value != '':  
                 takeoutStatus = takeout_value
                 ppi('Takeout Status: ' + takeoutStatus)
@@ -1691,7 +1692,6 @@ def process_match_x01(m):
     
     # Check for 1. Dart
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 1:
-        receive_takeout_detection()
         isGameFinished = False
         dart1score = points
         dart1Thrown = {
@@ -1710,7 +1710,6 @@ def process_match_x01(m):
 
     # Check for 2. Dart
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 2:
-        receive_takeout_detection()
         isGameFinished = False
         dart2score = str(int(points) - int(dart1score))
         dart2Thrown = {
@@ -1729,7 +1728,6 @@ def process_match_x01(m):
 
     # Check for 3. Dart - Score-call
     elif turns != None and turns['throws'] != [] and len(turns['throws']) == 3:
-        receive_takeout_detection()
         isGameFinished = False
         dart3score = str(int(points) - int(dart1score) - int(dart2score))
         dart3Thrown = {
@@ -2124,7 +2122,8 @@ def process_match_cricket(m):
             "game": {
                 "mode": variant,
                 "dartNumber": "3",
-                "dartValue": throwPoints,        
+                "dartValue": throwPoints, 
+                "Takeout": takeoutStatus,        
 
             }
         }
@@ -2382,7 +2381,8 @@ def process_match_rtw(m):
             "game": {
                 "mode": variant,
                 "dartNumber": "3",
-                "dartValue": points,        
+                "dartValue": points, 
+                "Takeout": takeoutStatus,        
 
             }
         }
@@ -2657,7 +2657,8 @@ def on_message_autodarts(ws, message):
             global lastMessage
             m = json.loads(message)
             # ppi(json.dumps(m, indent = 4, sort_keys = True))
-  
+            receive_takeout_detection()
+
             if m['channel'] == 'autodarts.matches':
                 data = m['data']
 
