@@ -52,7 +52,12 @@ jobs:
 
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: pyinstaller -F -n darts-caller -i resources/darts-caller.ico --add-data "templates;templates" --add-data "static;static" --collect-all certifi darts-caller.py 
+            CMD_BUILD: | 
+              touch .env
+              echo "AUTODARTS_CLIENT_ID=${{ vars.AUTODARTS_CLIENT_ID }}" > .env
+              echo "AUTODARTS_CLIENT_SECRET=${{ vars.AUTODARTS_CLIENT_SECRET }}" >> .env
+              cat .env
+              pyinstaller -F -n darts-caller -i resources/darts-caller.ico --add-data "templates;templates" --add-data "static;static" --collect-all certifi darts-caller.py 
             OUT_FILE_NAME: darts-caller.exe 
             ASSET_MIME: application/vnd.microsoft.portable-executable
 
