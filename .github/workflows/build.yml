@@ -60,6 +60,9 @@ jobs:
             TARGET: linux-arm64
             CMD_BUILD: |
               sudo apt-get update
+              sudo apt-get update -y
+              sudo apt-get upgrade -y
+              sudo apt-get install --reinstall -y python3-pkg-resources
               sudo apt-get install -y qemu-user-static binfmt-support
               docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
               docker run --rm -v /usr/bin/qemu-arm-static:/usr/bin/qemu-arm-static --platform linux/arm64/v8 -v $(pwd):/workdir -w /workdir arm64v8/ubuntu:20.04 bash -c "apt-get update -y && apt-get install -y python3-pip && pip install -r requirements.txt && pyinstaller -F -n darts-caller-arm64 -i resources/darts-caller.svg --add-data 'templates:templates' --add-data 'static:static' --collect-all certifi darts-caller.py"
@@ -75,14 +78,7 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: 3.8
-    - name: Update and upgrade system packages
-      run: |
-        sudo apt-get update -y
-        sudo apt-get upgrade -y
-
-    - name: Reinstall python3-pkg-resources
-      run: |
-        sudo apt-get install --reinstall -y python3-pkg-resources
+    
 
     - name: Install dependencies
       run: |
