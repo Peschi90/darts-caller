@@ -52,11 +52,7 @@ jobs:
 
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: | 
-              touch .env
-              echo "AUTODARTS_CLIENT_ID=${{ vars.AUTODARTS_CLIENT_ID }}" > .env
-              echo "AUTODARTS_CLIENT_SECRET=${{ vars.AUTODARTS_CLIENT_SECRET }}" >> .env
-              cat .env
+            CMD_BUILD: |
               pyinstaller -F -n darts-caller -i resources/darts-caller.ico --add-data "templates;templates" --add-data "static;static" --collect-all certifi darts-caller.py 
             OUT_FILE_NAME: darts-caller.exe 
             ASSET_MIME: application/vnd.microsoft.portable-executable
@@ -92,14 +88,12 @@ jobs:
         touch .env
         echo "AUTODARTS_CLIENT_ID=${{ vars.AUTODARTS_CLIENT_ID }}" > .env
         echo "AUTODARTS_CLIENT_SECRET=${{ vars.AUTODARTS_CLIENT_SECRET }}" >> .env
+        echo "Environment variables written to .env"
         cat .env
 
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: |
-        touch .env
-        echo "AUTODARTS_CLIENT_ID=${{ vars.AUTODARTS_CLIENT_ID }}" > .env
-        echo "AUTODARTS_CLIENT_SECRET=${{ vars.AUTODARTS_CLIENT_SECRET }}" >> .env
-        cat .env
+        cp .env ./dist/  # Kopiere die .env-Datei ins Build-Verzeichnis
         ${{matrix.CMD_BUILD}}
 
     - name: Load Release URL File from release job
