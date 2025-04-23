@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import sys
 from pathlib import Path
 import time
@@ -23,6 +24,7 @@ import json
 import certifi
 import requests
 import websocket
+import time
 from autodarts_keycloak_client import AutodartsKeycloakClient
 from flask import Flask, render_template, send_from_directory, request
 from flask_socketio import SocketIO
@@ -94,10 +96,10 @@ DEFAULT_CALLERS_BANNED_FILE = 'banned.txt'
 DEFAULT_CALLERS_FAVOURED_FILE = 'favoured.txt'
 DEFAULT_HOST_IP = '0.0.0.0'
 
-
-AUTODARTS_CLIENT_ID = 'wusaaa-caller-for-autodarts'
+load_dotenv()
+AUTODARTS_CLIENT_ID = os.getenv('AUTODARTS_CLIENT_ID')
 AUTODARTS_REALM_NAME = 'autodarts'
-AUTODARTS_CLIENT_SECRET = "4hg5d4fddW7rqgoY8gZ42aMpi2vjLkzf"
+AUTODARTS_CLIENT_SECRET = os.getenv('AUTODARTS_CLIENT_SECRET')
 AUTODARTS_URL = 'https://autodarts.io'
 AUTODARTS_AUTH_URL = 'https://login.autodarts.io/'
 AUTODARTS_LOBBIES_URL = 'https://api.autodarts.io/gs/v0/lobbies/'
@@ -247,6 +249,10 @@ CALLER_PROFILES = {
     # 'TODONAME': ('TODOLINK', TODOVERSION),  
 }
 
+#Peschi90 Vars
+
+LAST_TAKEOUT_STATUS = None
+LAST_RESET_STATUS = None
 
 
 
@@ -1087,10 +1093,13 @@ def receive_local_board_address():
         ppe('Fetching local-board-address failed', e)
 
 # Get Takeout Status from board to display it on WLED
+
 def receive_takeout_detection():
     # get takoutstatus out of api
     global takeoutStatus
     takeoutStatus = None
+    global LAST_TAKEOUT_STATUS
+    global LAST_RESET_STATUS
    # ppi('Takeout Status: function called')
     try:
         # ppi('Takeout Status: start try')
@@ -1099,15 +1108,30 @@ def receive_takeout_detection():
             takeout_value_res = requests.get(AUTODARTS_BOARDS_URL + AUTODART_USER_BOARD_ID, headers={'Authorization': 'Bearer ' + kc.access_token})
             # ppi('Takeout Status: ' + takeout_value_res)
             takeout_value = takeout_value_res.json()['state']['status']
+            reset_value = takeout_value_res.json()['state']['event']
            # ppi('Takeout Status: Takeout Value after json: ' + takeout_value)
-            if takeout_value != None and takeout_value != '':  
-                takeoutStatus = takeout_value
-                ppi('Takeout Status: ' + takeoutStatus)
+            if takeout_value != None and takeout_value != '':
+                if takeout_value != LAST_TAKEOUT_STATUS:
+                    takeoutStatus = takeout_value
+                    LAST_TAKEOUT_STATUS = takeoutStatus
+                    ppi('Takeout Status: ' + takeoutStatus)
+                    broadcast({"event": takeoutStatus})
             else:
                 takeoutStatus = None
                 ppi('Takeout Status: UNKNOWN') 
+            if reset_value != None and reset_value != '':
+                if reset_value != LAST_RESET_STATUS:
+                    LAST_RESET_STATUS = reset_value
+                    ppi('Reset Status: ' + reset_value)
+                    if reset_value == 'Manual reset':
+                        broadcast({"event": 'reset'})
+                    else:
+                        broadcast({"event": reset_value})
+            else: 
+                reset_value = None
+                ppi('Reset Status: UNKNOWN') 
             
-        broadcast({"event":takeoutStatus})
+        
             
     except Exception as e:
         takeoutStatus = None
@@ -1148,7 +1172,7 @@ def listen_to_match(m, ws):
         try:
             res = requests.get(AUTODARTS_MATCHES_URL + currentMatch, headers={'Authorization': 'Bearer ' + kc.access_token})
             m = res.json()
-            # ppi(json.dumps(m, indent = 4, sort_keys = True))
+            ppi(json.dumps(m, indent = 4, sort_keys = True))
 
             currentPlayerName = None
             players = []
@@ -1241,20 +1265,21 @@ def listen_to_match(m, ws):
 
         receive_local_board_address()
 
-        paramsSubscribeMatchesEvents = {
-            "channel": "autodarts.matches",
-            "type": "subscribe",
-            "topic": currentMatch + ".state"
-        }
-
-        ws.send(json.dumps(paramsSubscribeMatchesEvents))
-
         # paramsSubscribeMatchesEvents = {
         #     "channel": "autodarts.matches",
         #     "type": "subscribe",
-        #     "topic": currentMatch + ".game-events"
+        #     "topic": currentMatch + ".state"
         # }
+
         # ws.send(json.dumps(paramsSubscribeMatchesEvents))
+
+        paramsSubscribeMatchesEvents = {
+            "channel": "autodarts.matches",
+            "type": "subscribe",
+            # "topic": currentMatch + ".game-events"
+            "topic": currentMatch + ".game-events"
+        }
+        ws.send(json.dumps(paramsSubscribeMatchesEvents))
 
         
     elif m['event'] == 'finish' or m['event'] == 'delete':
@@ -1702,8 +1727,7 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "1",
-                "dartValue": points, 
-                "Takeout": takeoutStatus,        
+                "dartValue": points       
             }
         }
         broadcast(dart1Thrown)
@@ -1720,8 +1744,7 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "2",
-                "dartValue": dart2score, 
-                "Takeout": takeoutStatus,        
+                "dartValue": dart2score        
             }
         }
         broadcast(dart2Thrown)
@@ -1738,8 +1761,7 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "3",
-                "dartValue": dart3score, 
-                "Takeout": takeoutStatus,        
+                "dartValue": dart3score        
             }
         }
         broadcast(dart3Thrown)
@@ -1751,8 +1773,7 @@ def process_match_x01(m):
                 "mode": variant,
                 "pointsLeft": str(remainingPlayerScore),
                 "dartNumber": "3",
-                "dartValue": points, 
-                "Takeout": takeoutStatus,       
+                "dartValue": points       
             }
         }
         broadcast(dartsThrown)
@@ -2627,6 +2648,7 @@ def on_open_autodarts(ws):
             "channel": "autodarts.boards",
             "type": "subscribe",
             "topic": AUTODART_USER_BOARD_ID + ".matches"
+            
         }
         ws.send(json.dumps(paramsSubscribeMatchesEvents))
 
@@ -2657,7 +2679,8 @@ def on_message_autodarts(ws, message):
             global lastMessage
             m = json.loads(message)
             # ppi(json.dumps(m, indent = 4, sort_keys = True))
-            receive_takeout_detection()
+            if m is not None:
+                ppi('Received message from autodarts')
 
             if m['channel'] == 'autodarts.matches':
                 data = m['data']
@@ -2698,13 +2721,13 @@ def on_message_autodarts(ws, message):
 
             elif m['channel'] == 'autodarts.boards':
                 data = m['data']
-                # ppi(json.dumps(data, indent = 4, sort_keys = True))
+                ppi(json.dumps(data, indent = 4, sort_keys = True))
 
                 listen_to_match(data, ws)
             
             elif m['channel'] == 'autodarts.users':
                 data = m['data']
-                # ppi(json.dumps(data, indent = 4, sort_keys = True))
+                ppi(json.dumps(data, indent = 4, sort_keys = True))
                 if 'event' in data:
                     if data['event'] == 'lobby-enter':
                         # ppi("lobby-enter", data)
@@ -3138,13 +3161,19 @@ def sound(file_id):
     file_name = os.path.basename(file_path)
     return send_from_directory(directory, file_name)
 
-
+# function to run in a separate thread
+def run_receive_takeout_detection():
+    while True:
+        receive_takeout_detection()
+        time.sleep(0.2)  # Sleep for 200ms
 
 
 
 if __name__ == "__main__":
     check_already_running()
-        
+
+    
+
     ap = argparse.ArgumentParser()
     
     ap.add_argument("-U", "--autodarts_email", required=True, help="Registered email address at " + AUTODARTS_URL)
@@ -3310,7 +3339,10 @@ if __name__ == "__main__":
     global lobbyPlayers
     lobbyPlayers = []
 
-
+     # Start the receive_takeout_detection thread
+    detection_thread = threading.Thread(target=run_receive_takeout_detection)
+    detection_thread.daemon = True  # This makes sure the thread will exit when the main program exits
+    detection_thread.start()
 
     osType = plat
     osName = os.name
@@ -3405,3 +3437,5 @@ if __name__ == "__main__":
         kc.stop()
     except Exception as e:
         ppe("Connect failed: ", e)
+
+   
