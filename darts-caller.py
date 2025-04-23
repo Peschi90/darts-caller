@@ -98,8 +98,11 @@ DEFAULT_HOST_IP = '0.0.0.0'
 
 load_dotenv()
 AUTODARTS_CLIENT_ID = os.getenv('AUTODARTS_CLIENT_ID')
+print("Client ID: "+ AUTODARTS_CLIENT_ID)
+
 AUTODARTS_REALM_NAME = 'autodarts'
 AUTODARTS_CLIENT_SECRET = os.getenv('AUTODARTS_CLIENT_SECRET')
+print("Client Secret: " + AUTODARTS_CLIENT_SECRET)
 AUTODARTS_URL = 'https://autodarts.io'
 AUTODARTS_AUTH_URL = 'https://login.autodarts.io/'
 AUTODARTS_LOBBIES_URL = 'https://api.autodarts.io/gs/v0/lobbies/'
