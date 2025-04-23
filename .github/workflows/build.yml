@@ -13,6 +13,9 @@ jobs:
     name: Create Release
     runs-on: [ubuntu-latest]
     steps:
+    - name: Create .env file
+      run: echo "AUTODARTS_CLIENT_ID=${{ secrets.AUTODARTS_CLIENT_ID }}" > .env
+           echo "AUTODARTS_CLIENT_SECRET=${{ secrets.AUTODARTS_CLIENT_SECRET }}" >> .env
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -83,9 +86,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Create .env file
-      run: echo "AUTODARTS_CLIENT_ID=${{ secrets.AUTODARTS_CLIENT_ID }}" > .env
-           echo "AUTODARTS_CLIENT_SECRET=${{ secrets.AUTODARTS_CLIENT_SECRET }}" >> .env
 
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: ${{matrix.CMD_BUILD}}
