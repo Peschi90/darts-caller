@@ -100,12 +100,19 @@ DEFAULT_HOST_IP = '0.0.0.0'
 if hasattr(sys, "_MEIPASS"):
     # Pfad zur extrahierten .env-Datei
     env_path = Path(sys._MEIPASS) / ".env"
+    print(f"Inhalt von sys._MEIPASS: {list(Path(sys._MEIPASS).iterdir())}")
 else:
     # Lokaler Pfad für Entwicklungsumgebungen
     env_path = Path(".env")
 
 # Lade die Umgebungsvariablen aus der .env-Datei
 load_dotenv(dotenv_path=env_path)
+print(f"Pfad zur .env-Datei: {env_path}")
+if env_path.exists():
+    print(".env-Datei gefunden!")
+else:
+    print(".env-Datei nicht gefunden!")
+    
 
 # Zugriff auf die Variablen
 client_id = os.getenv("AUTODARTS_CLIENT_ID")
