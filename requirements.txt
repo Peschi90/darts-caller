@@ -12,3 +12,4 @@ psutil==5.9.8
 pycaw; platform_system == "Windows"
 cryptography==42.0.5
 dotenv==0.9.9
+python-dotenv

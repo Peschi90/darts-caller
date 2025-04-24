@@ -93,7 +93,7 @@ jobs:
     - name: Überprüfe Arbeitsverzeichnis vor Pyinstaller
       run: |
         echo "Inhalt des Arbeitsverzeichnisses:"
-        ls -la
+        if [ "${{ matrix.os }}" == "windows-latest" ]; then dir; else ls -la; fi
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: |
         ${{matrix.CMD_BUILD}}
