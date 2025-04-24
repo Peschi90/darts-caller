@@ -93,19 +93,30 @@ jobs:
     - name: Überprüfe Arbeitsverzeichnis vor Pyinstaller
       run: |
         echo "Inhalt des Arbeitsverzeichnisses:"
-        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then dir; else ls -la; fi
+        if "%matrix.os%" == "windows-latest" (
+          dir
+        ) else (
+          ls -la
+        )
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: |
         ${{matrix.CMD_BUILD}}
     - name: Überprüfe Arbeitsverzeichnis nach Pyinstaller
       run: |
         echo "Inhalt des Arbeitsverzeichnisses:"
-        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then dir; else ls -la; fi
-
+        if "%matrix.os%" == "windows-latest" (
+          dir
+        ) else (
+          ls -la
+        )
     - name: Überprüfe Build-Verzeichnis
       run: |
         echo "Inhalt des Build-Verzeichnisses:"
-        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then dir ./dist; else ls -la ./dist; fi
+        if "%matrix.os%" == "windows-latest" (
+          dir
+        ) else (
+          ls -la
+        )
         echo "Prüfe, ob .env-Datei eingebunden wurde:"
         strings ./dist/${{ matrix.OUT_FILE_NAME }} | grep AUTODARTS_CLIENT_ID || echo ".env nicht gefunden"
 
