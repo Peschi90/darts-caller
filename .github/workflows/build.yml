@@ -93,6 +93,7 @@ jobs:
 
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: |
+        mkdir -p ./dist  # Erstelle das Verzeichnis, falls es nicht existiert
         cp .env ./dist/  # Kopiere die .env-Datei ins Build-Verzeichnis
         ${{matrix.CMD_BUILD}}
 
