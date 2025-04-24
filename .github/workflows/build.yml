@@ -40,20 +40,20 @@ jobs:
         include:
           - os: macos-latest
             TARGET: macos
-            CMD_BUILD: pyinstaller -F -n darts-caller-mac -i resources/darts-caller.icns --add-data "templates:templates" --add-data "static:static" --collect-all certifi darts-caller.py 
+            CMD_BUILD: pyinstaller -F -n darts-caller-mac -i resources/darts-caller.icns --add-data "templates:templates" --add-data "static:static" --add-data ".env:.env" --collect-all certifi darts-caller.py 
             OUT_FILE_NAME: darts-caller-mac
             ASSET_MIME: application/zip
 
           - os: ubuntu-22.04
             TARGET: ubuntu
-            CMD_BUILD: pyinstaller -F -n darts-caller -i resources/darts-caller.svg --add-data "templates:templates" --add-data "static:static" --collect-all certifi darts-caller.py
+            CMD_BUILD: pyinstaller -F -n darts-caller -i resources/darts-caller.svg --add-data "templates:templates" --add-data "static:static" --add-data ".env:.env" --collect-all certifi darts-caller.py
             OUT_FILE_NAME: darts-caller
             ASSET_MIME: application/octet-stream
 
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: |
-              pyinstaller -F -n darts-caller -i resources/darts-caller.ico --add-data "templates;templates" --add-data "static;static" --collect-all certifi darts-caller.py 
+              pyinstaller -F -n darts-caller -i resources/darts-caller.ico --add-data "templates;templates" --add-data "static;static" --add-data ".env:.env" --collect-all certifi darts-caller.py 
             OUT_FILE_NAME: darts-caller.exe 
             ASSET_MIME: application/vnd.microsoft.portable-executable
 
@@ -93,9 +93,7 @@ jobs:
 
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: |
-        mkdir -p ./dist  # Erstelle das Verzeichnis, falls es nicht existiert
-        cp .env ./dist/  # Kopiere die .env-Datei ins Build-Verzeichnis
-        ${{matrix.CMD_BUILD}}
+        ${{matrix.CMD_BUILD}} --add-data ".env:.env"  # Binde die .env-Datei in den Build ein
 
     - name: Load Release URL File from release job
       uses: actions/download-artifact@v4

@@ -96,7 +96,9 @@ DEFAULT_CALLERS_BANNED_FILE = 'banned.txt'
 DEFAULT_CALLERS_FAVOURED_FILE = 'favoured.txt'
 DEFAULT_HOST_IP = '0.0.0.0'
 
-load_dotenv()
+# Pfad zur extrahierten .env-Datei
+env_path = Path(sys._MEIPASS) / ".env" if hasattr(sys, "_MEIPASS") else ".env"
+load_dotenv(dotenv_path=env_path)
 AUTODARTS_CLIENT_ID = os.getenv('AUTODARTS_CLIENT_ID')
 print("Client ID: "+ AUTODARTS_CLIENT_ID)
 
