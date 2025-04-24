@@ -123,21 +123,6 @@ jobs:
         echo "Contents of .env file:"
         cat .env
     
-    - name: Überprüfe Build-Verzeichnis (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        echo "Inhalt des Build-Verzeichnisses:"
-        dir
-        echo "Prüfe, ob .env-Datei eingebunden wurde:"
-        strings ./dist/${{ matrix.OUT_FILE_NAME }} | grep AUTODARTS_CLIENT_ID || echo ".env nicht gefunden"
-    - name: Überprüfe Build-Verzeichnis (Non-Windows)
-      if: runner.os != 'Windows'
-      run: |
-        echo "Inhalt des Build-Verzeichnisses:"
-        ls -la
-        echo "Prüfe, ob .env-Datei eingebunden wurde:"
-        strings ./dist/${{ matrix.OUT_FILE_NAME }} | grep AUTODARTS_CLIENT_ID || echo ".env nicht gefunden"
-
     - name: Überprüfe eingebundene Dateien
       run: |
         echo "Prüfe eingebundene Dateien in der ausführbaren Datei:"
