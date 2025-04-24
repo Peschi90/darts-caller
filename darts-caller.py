@@ -99,14 +99,15 @@ DEFAULT_HOST_IP = '0.0.0.0'
 # Prüfe, ob das Programm als One-File-Build ausgeführt wird
 if hasattr(sys, "_MEIPASS"):
     # Pfad zur extrahierten .env-Datei
-    env_path = Path(sys._MEIPASS) / ".env"
+    env_path = Path(sys._MEIPASS) / ".env/.env"
     print(f"Inhalt von sys._MEIPASS: {list(Path(sys._MEIPASS).iterdir())}")
 else:
     # Lokaler Pfad für Entwicklungsumgebungen
     env_path = Path(".env")
 
+print(f"{env_path}")
 # Lade die Umgebungsvariablen aus der .env-Datei
-load_dotenv(dotenv_path=env_path +"\.env")
+load_dotenv(dotenv_path=env_path)
 print(f"AUTODARTS_CLIENT_ID: {os.getenv('AUTODARTS_CLIENT_ID')}")
 print(f"AUTODARTS_CLIENT_SECRET: {os.getenv('AUTODARTS_CLIENT_SECRET')}")
 print(f"Pfad zur .env-Datei: {env_path}")
