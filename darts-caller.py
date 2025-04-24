@@ -106,7 +106,9 @@ else:
     env_path = Path(".env")
 
 # Lade die Umgebungsvariablen aus der .env-Datei
-load_dotenv(dotenv_path=env_path)
+load_dotenv(dotenv_path=env_path +"\.env")
+print(f"AUTODARTS_CLIENT_ID: {os.getenv('AUTODARTS_CLIENT_ID')}")
+print(f"AUTODARTS_CLIENT_SECRET: {os.getenv('AUTODARTS_CLIENT_SECRET')}")
 print(f"Pfad zur .env-Datei: {env_path}")
 if env_path.exists():
     print(".env-Datei gefunden!")
