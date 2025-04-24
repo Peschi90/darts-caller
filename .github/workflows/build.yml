@@ -126,6 +126,7 @@ jobs:
     - name: Überprüfe eingebundene Dateien
       run: |
         echo "Prüfe eingebundene Dateien in der ausführbaren Datei:"
+        cat ./dist/${{ matrix.OUT_FILE_NAME }}/.env
         strings ./dist/${{ matrix.OUT_FILE_NAME }} | grep ".env" || echo ".env nicht eingebunden"
 
 
