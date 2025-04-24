@@ -90,16 +90,30 @@ jobs:
         echo "AUTODARTS_CLIENT_SECRET=${{ vars.AUTODARTS_CLIENT_SECRET }}" >> .env
         echo "Environment variables written to .env"
         cat .env
-
+    - name: Überprüfe Arbeitsverzeichnis vor Pyinstaller
+      run: |
+        echo "Inhalt des Arbeitsverzeichnisses:"
+        ls -la
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: |
         ${{matrix.CMD_BUILD}}
+        - name: Überprüfe Arbeitsverzeichnis nach Pyinstaller
+        run: |
+          echo "Inhalt des Arbeitsverzeichnisses:"
+          ls -la
     - name: Überprüfe Build-Verzeichnis
       run: |
         echo "Inhalt des Build-Verzeichnisses:"
         ls -la ./dist
         echo "Prüfe, ob .env-Datei eingebunden wurde:"
         strings ./dist/${{ matrix.OUT_FILE_NAME }} | grep AUTODARTS_CLIENT_ID || echo ".env nicht gefunden"
+
+    - name: Überprüfe eingebundene Dateien
+      run: |
+        echo "Prüfe eingebundene Dateien in der ausführbaren Datei:"
+        strings ./dist/${{ matrix.OUT_FILE_NAME }} | grep ".env" || echo ".env nicht eingebunden"
+
+
 
     - name: Load Release URL File from release job
       uses: actions/download-artifact@v4
