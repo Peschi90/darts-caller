@@ -97,10 +97,10 @@ jobs:
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: |
         ${{matrix.CMD_BUILD}}
-        - name: Überprüfe Arbeitsverzeichnis nach Pyinstaller
-        run: |
-          echo "Inhalt des Arbeitsverzeichnisses:"
-          ls -la
+    - name: Überprüfe Arbeitsverzeichnis nach Pyinstaller
+      run: |
+        echo "Inhalt des Arbeitsverzeichnisses:"
+        ls -la
     - name: Überprüfe Build-Verzeichnis
       run: |
         echo "Inhalt des Build-Verzeichnisses:"
