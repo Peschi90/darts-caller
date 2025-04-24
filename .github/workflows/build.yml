@@ -116,6 +116,12 @@ jobs:
       run: |
         echo "Inhalt des Arbeitsverzeichnisses:"
         ls -la
+
+    - name: Verify .env File
+      run: |
+        echo "Contents of .env file:"
+        cat .env
+    
     - name: Überprüfe Build-Verzeichnis (Windows)
       if: runner.os == 'Windows'
       run: |
