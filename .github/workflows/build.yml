@@ -88,6 +88,7 @@ jobs:
         touch .env
         echo "AUTODARTS_CLIENT_ID=${{ vars.AUTODARTS_CLIENT_ID }}" > .env
         echo "AUTODARTS_CLIENT_SECRET=${{ vars.AUTODARTS_CLIENT_SECRET }}" >> .env
+        chmod 755 .env  # Set permissions to be readable
         echo "Environment variables written to .env"
         cat .env
     - name: Überprüfe Arbeitsverzeichnis vor Pyinstaller (Windows)
