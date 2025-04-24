@@ -96,15 +96,27 @@ DEFAULT_CALLERS_BANNED_FILE = 'banned.txt'
 DEFAULT_CALLERS_FAVOURED_FILE = 'favoured.txt'
 DEFAULT_HOST_IP = '0.0.0.0'
 
-# Pfad zur extrahierten .env-Datei
-env_path = Path(sys._MEIPASS) / ".env" if hasattr(sys, "_MEIPASS") else ".env"
+# Prüfe, ob das Programm als One-File-Build ausgeführt wird
+if hasattr(sys, "_MEIPASS"):
+    # Pfad zur extrahierten .env-Datei
+    env_path = Path(sys._MEIPASS) / ".env"
+else:
+    # Lokaler Pfad für Entwicklungsumgebungen
+    env_path = Path(".env")
+
+# Lade die Umgebungsvariablen aus der .env-Datei
 load_dotenv(dotenv_path=env_path)
-AUTODARTS_CLIENT_ID = os.getenv('AUTODARTS_CLIENT_ID')
-print("Client ID: "+ AUTODARTS_CLIENT_ID)
+
+# Zugriff auf die Variablen
+client_id = os.getenv("AUTODARTS_CLIENT_ID")
+client_secret = os.getenv("AUTODARTS_CLIENT_SECRET")
+
+print(f"Client ID: {client_id}")
+print(f"Client Secret: {client_secret}")
+AUTODARTS_CLIENT_ID = client_id
 
 AUTODARTS_REALM_NAME = 'autodarts'
-AUTODARTS_CLIENT_SECRET = os.getenv('AUTODARTS_CLIENT_SECRET')
-print("Client Secret: " + AUTODARTS_CLIENT_SECRET)
+AUTODARTS_CLIENT_SECRET = client_secret
 AUTODARTS_URL = 'https://autodarts.io'
 AUTODARTS_AUTH_URL = 'https://login.autodarts.io/'
 AUTODARTS_LOBBIES_URL = 'https://api.autodarts.io/gs/v0/lobbies/'
