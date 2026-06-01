@@ -1,7 +1,7 @@
 # DARTS-CALLER
-[![Downloads](https://img.shields.io/github/downloads/lbormann/darts-caller/total.svg)](https://github.com/lbormann/darts-caller/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Peschi90/darts-caller/total.svg)](https://github.com/Peschi90/darts-caller/releases/latest)
 
-Darts-caller plays back sound-files accordingly to the state of a https://autodarts.io game. Furthermore it acts as a central hub by forwarding game-events to connected clients like https://github.com/lbormann/darts-extern that process incoming data to automate other dart-web-platforms like https://lidarts.org.
+Darts-caller plays back sound-files accordingly to the state of a https://autodarts.io game. Furthermore it acts as a central hub by forwarding game-events to connected clients like https://github.com/Peschi90/darts-extern that process incoming data to automate other dart-web-platforms like https://lidarts.org.
 
 Learn more about the [Features!](#workflow--functionality)
 
@@ -26,9 +26,9 @@ Learn more about the [Features!](#workflow--functionality)
 
 <div style="display: flex;">
   <h2> Preview - Web-Caller </h2>
-  <img src="https://github.com/lbormann/darts-caller/blob/master/images/chat.jpg" alt="chat preview 1" style="width:250px;margin-right:15px;margin-top:15px;"/>
-  <img src="https://github.com/lbormann/darts-caller/blob/master/images/chat2.jpg" alt="chat preview 2" style="width:250px;margin-right:15px;margin-top:15px;"/>
-  <img src="https://github.com/lbormann/darts-caller/blob/master/images/chat3.jpg" alt="chat preview 3" style="width:250px;margin-right:15px;margin-top:15px;"/>
+    <img src="https://github.com/Peschi90/darts-caller/blob/master/images/chat.jpg" alt="chat preview 1" style="width:250px;margin-right:15px;margin-top:15px;"/>
+    <img src="https://github.com/Peschi90/darts-caller/blob/master/images/chat2.jpg" alt="chat preview 2" style="width:250px;margin-right:15px;margin-top:15px;"/>
+    <img src="https://github.com/Peschi90/darts-caller/blob/master/images/chat3.jpg" alt="chat preview 3" style="width:250px;margin-right:15px;margin-top:15px;"/>
 </div>
 
 
@@ -36,7 +36,7 @@ Learn more about the [Features!](#workflow--functionality)
 
 ### Desktop-OS:
 
-- If you're running a desktop-driven OS it's recommended to use [darts-hub](https://github.com/lbormann/darts-hub) as it takes care of starting, updating, configurating and managing multiple apps.
+- If you're running a desktop-driven OS it's recommended to use [darts-hub](https://github.com/Peschi90/darts-hub) as it takes care of starting, updating, configurating and managing multiple apps.
 
 
 ### Headless-OS:
@@ -44,26 +44,116 @@ Learn more about the [Features!](#workflow--functionality)
 - Download the appropriate executable in the release section.
 
 
-### By Source:
-> [!NOTE]
-> running by source i supported again since v2.19.0
+> [!WARNING]
+> Running darts-caller directly from source is no longer supported.
+> Due to the new authentication flow and repeated Autodarts Terms of Service violations,
+> source-based execution had to be discontinued.
 
-Setup python3
+~~### By Source:~~
+~~> [!NOTE]~~
+~~> running by source i supported again since v2.19.0~~
 
-- Download and install python 3.x.x for your specific os.
+~~Setup python3~~
+
+~~- Download and install python 3.x.x for your specific os.~~
 
 
-#### Get the project
+~~#### Get the project~~
 
-    git clone https://github.com/lbormann/darts-caller.git
+~~    git clone https://github.com/Peschi90/darts-caller.git~~
 
-Go to download-directory and type:
+~~Go to download-directory and type:~~
 
-    pip3 install -r requirements.txt
+~~    pip3 install -r requirements.txt~~
 
-Optional for Linux: If you encounter problems local playback:
+~~Optional for Linux: If you encounter problems local playback:~~
 
-    sudo apt-get install python3-sdl2
+~~    sudo apt-get install python3-sdl2~~
+
+
+### Headless Linux: Start and Use the Release Binary
+
+This is the recommended way for Raspberry Pi, mini servers, Docker hosts, or any SSH-only machine.
+
+1. Create a working folder on your host:
+
+    mkdir -p /opt/darts-caller
+    cd /opt/darts-caller
+
+2. Download the latest Linux release binary from terminal.
+
+    Option A (wget):
+
+    wget -O darts-caller https://github.com/Peschi90/darts-caller/releases/latest/download/darts-caller-linux
+
+    Option B (curl):
+
+    curl -L -o darts-caller https://github.com/Peschi90/darts-caller/releases/latest/download/darts-caller-linux
+
+    If the asset name changes in a future release, open the releases page once
+    and replace the URL with the correct Linux asset URL.
+
+3. Make the binary executable:
+
+    chmod +x darts-caller
+
+4. Create media folders:
+
+    mkdir -p /opt/darts-caller/media
+    mkdir -p /opt/darts-caller/media-shared
+
+5. Start the caller with your board id and media path:
+
+    ./darts-caller -B YOUR_BOARD_ID -M /opt/darts-caller/media -MS /opt/darts-caller/media-shared -DEB 1
+
+6. Open the web UI from any device in your network:
+
+    https://YOUR_HOST_IP:8079
+
+   Accept the self-signed certificate warning in the browser.
+
+7. Complete Autodarts login from the web UI banner:
+   You will see the same verification URL and user code that are shown in the console.
+   Approve the login once, then the caller continues automatically.
+
+8. Optional (recommended): configure autostart from terminal with systemd.
+
+   Create a dedicated service user:
+
+    sudo useradd --system --home /opt/darts-caller --shell /usr/sbin/nologin dartscaller
+    sudo chown -R dartscaller:dartscaller /opt/darts-caller
+
+   Create a service file:
+
+    sudo tee /etc/systemd/system/darts-caller.service > /dev/null <<'EOF'
+    [Unit]
+    Description=darts-caller
+    After=network-online.target
+    Wants=network-online.target
+
+    [Service]
+    Type=simple
+    User=dartscaller
+    Group=dartscaller
+    WorkingDirectory=/opt/darts-caller
+    ExecStart=/opt/darts-caller/darts-caller -B YOUR_BOARD_ID -M /opt/darts-caller/media -MS /opt/darts-caller/media-shared -DEB 1
+    Restart=always
+    RestartSec=5
+
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+
+   Enable and start it:
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable darts-caller
+    sudo systemctl start darts-caller
+
+   Check status and logs:
+
+    sudo systemctl status darts-caller
+    sudo journalctl -u darts-caller -f
 
 
 
@@ -289,6 +379,82 @@ Disclaimer: For uninterrupted calling experience on mobile devices, ensure that 
 
 
 
+
+## AUTODARTS LOGIN
+
+Since the caller no longer accepts your Autodarts email and password on the
+command line, it signs you in through the official Autodarts OAuth
+**device flow**. You only have to do this once per machine — the refresh
+token is stored under `~/.config/darts-caller/tokens.json` (mode `0600`)
+and is reused automatically.
+
+### What happens on first start
+
+1. The caller starts the local web server **immediately** (default
+   `https://127.0.0.1:8079`) — even before it talks to Autodarts. This is
+   intentional so that you can read the login prompt from the browser on
+   any device, including headless setups (Raspberry Pi, Docker, SSH
+   without a desktop).
+2. In the background it asks Autodarts for a device code.
+3. The console prints a short user code and two URLs:
+   - a **verification URL** where you type the code manually,
+   - a **direct link** with the code already pre-filled.
+4. At the same time, the web UI shows a yellow banner with the exact
+   same information — code, URL, direct link and the time left until the
+   code expires.
+5. As soon as you approve the connection on autodarts.io, the banner
+   disappears, the caller fetches your user info, opens the Autodarts
+   websocket, and starts working normally.
+
+### Login from a desktop (with browser)
+
+Nothing special — when you start the caller, your default browser is
+opened automatically on the Autodarts page where you confirm the
+connection. The console additionally shows the code and URL in case the
+browser failed to open or you want to approve on a different device.
+
+### Login from a headless system (no GUI)
+
+Typical examples: Raspberry Pi running over SSH, Docker container, a
+small home-server box.
+
+1. Start the caller on the headless host as usual. The console will
+   print something like:
+
+       Connect darts-caller to your Autodarts account
+       https://autodarts.io/device
+       code   ABCD-1234
+       …or open this direct link (code pre-filled):
+       https://autodarts.io/device?user_code=ABCD-1234
+
+2. From **any** other device on your network — phone, laptop, tablet —
+   open the caller's web UI:
+
+       https://<host-or-ip-of-the-caller>:8079/
+
+   Your browser will warn about the self-signed certificate (that's
+   normal for a local service); accept and continue.
+3. At the top of the page you now see the **login banner** with the
+   same code, URLs and an expiry countdown.
+4. Tap the direct link (or the URL + code) on that other device, sign in
+   to your Autodarts account, and approve the connection.
+5. The banner vanishes within a couple of seconds and the caller is
+   ready.
+
+> The web UI does **not** require an Autodarts login itself. Only the
+> caller's connection to autodarts.io does. The `/api/auth/status`
+> endpoint that powers the banner is intentionally public so the prompt
+> can be read before any other authentication happens.
+
+### Refreshing / re-login
+
+* The caller refreshes the access token in the background while it runs.
+* If the refresh token ever expires (after ~30 days of the caller being
+  off), the device-flow banner simply reappears the next time you
+  start the caller.
+* To force a fresh login, delete the token file:
+  - Linux/macOS: `rm ~/.config/darts-caller/tokens.json`
+  - Windows: delete `%USERPROFILE%\.config\darts-caller\tokens.json`
 
 
 ## RUN IT
@@ -706,7 +872,7 @@ version: '3.3'
 
 services:
   darts-caller:
-    image: lbormann/darts-caller
+    image: Peschi90/darts-caller
     container_name: darts-caller
     restart: unless-stopped
     ports:
@@ -781,7 +947,7 @@ There are multiple ways to ban an undesired voice-pack:
 
 - Option 1) Visit web-caller and press "Ban Caller!"
 - Option 2) Delete ALL audio-files of voice-pack-folder.
-- Option 3) use [darts-voice](https://github.com/lbormann/darts-voice).
+- Option 3) use [darts-voice](https://github.com/Peschi90/darts-voice).
 
 All options forcing the application to either download files again nor using a voice-pack for calling.
 If you wish to revoke a ban, open 'banned.txt' and remove the line from the list.

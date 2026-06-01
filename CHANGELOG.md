@@ -1,3 +1,10 @@
+## 3.0.0
+- Changes Auth FLow to match the new Autodarts Procedure. **READ THE README FOR DETAILS**.
+- Changed startup flow for better headless UX: web server starts first, Autodarts login/bootstrap runs in background.
+- Added Autodarts login status API (`/api/auth/status`) and web UI login banner for device-flow approval on headless systems.
+- Updated README and docs for new auth flow, headless Linux release usage, terminal download instructions, and systemd autostart setup.
+
+
 ## 2.20.4
 - fix bug where player specific remaining score messages were not played for the bot player.
 - reworked playback threads to avoid overlapping sounds and called scores after match is finished.
