@@ -1,4 +1,4 @@
-## 3.0.1.0
+## 3.0.1.1
 - Changes Auth FLow to match the new Autodarts Procedure. **READ THE README FOR DETAILS**.
 - Changed startup flow for better headless UX: web server starts first, Autodarts login/bootstrap runs in background.
 - Added Autodarts login status API (`/api/auth/status`) and web UI login banner for device-flow approval on headless systems.
