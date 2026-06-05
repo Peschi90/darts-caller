@@ -1,3 +1,92 @@
+## 3.0.1.2
+- Web Caller Ui changes:
+  - Added "Start Board" and "Stop Board" buttons to the web UI for controlling the dartboard directly from the interface.
+  - These buttons emit "board-start" and "board-stop" messages via WebSocket to trigger the corresponding actions in the caller.
+- Changes Auth FLow to match the new Autodarts Procedure. **READ THE README FOR DETAILS**.
+- Changed startup flow for better headless UX: web server starts first, Autodarts login/bootstrap runs in background.
+- Added Autodarts login status API (`/api/auth/status`) and web UI login banner for device-flow approval on headless systems.
+- Updated README and docs for new auth flow, headless Linux release usage, terminal download instructions, and systemd autostart setup.
+
+### BUGFIXES
+- fix Board IP retrieval for users with multiple board IPs (e.g., http and https) provided by Autodarts
+- fix Web Caller Board Control: added missing "Stop Board" button and corresponding WebSocket event handling for board control from the web interface
+
+### AUTODARTS LOGIN
+
+Since the caller no longer accepts your Autodarts email and password on the
+command line, it signs you in through the official Autodarts OAuth
+**device flow**. You only have to do this once per machine — the refresh
+token is stored under `~/.config/darts-caller/tokens.json` (mode `0600`)
+and is reused automatically.
+
+### What happens on first start
+
+1. The caller starts the local web server **immediately** (default
+   `https://127.0.0.1:8079`) — even before it talks to Autodarts. This is
+   intentional so that you can read the login prompt from the browser on
+   any device, including headless setups (Raspberry Pi, Docker, SSH
+   without a desktop).
+2. In the background it asks Autodarts for a device code.
+3. The console prints a short user code and two URLs:
+   - a **verification URL** where you type the code manually,
+   - a **direct link** with the code already pre-filled.
+4. At the same time, the web UI shows a yellow banner with the exact
+   same information — code, URL, direct link and the time left until the
+   code expires.
+5. As soon as you approve the connection on autodarts.io, the banner
+   disappears, the caller fetches your user info, opens the Autodarts
+   websocket, and starts working normally.
+
+### Login from a desktop (with browser)
+
+Nothing special — when you start the caller, your default browser is
+opened automatically on the Autodarts page where you confirm the
+connection. The console additionally shows the code and URL in case the
+browser failed to open or you want to approve on a different device.
+
+### Login from a headless system (no GUI)
+
+Typical examples: Raspberry Pi running over SSH, Docker container, a
+small home-server box.
+
+1. Start the caller on the headless host as usual. The console will
+   print something like:
+
+       Connect darts-caller to your Autodarts account
+       https://autodarts.io/device
+       code   ABCD-1234
+       …or open this direct link (code pre-filled):
+       https://autodarts.io/device?user_code=ABCD-1234
+
+2. From **any** other device on your network — phone, laptop, tablet —
+   open the caller's web UI:
+
+       https://<host-or-ip-of-the-caller>:8079/
+
+   Your browser will warn about the self-signed certificate (that's
+   normal for a local service); accept and continue.
+3. At the top of the page you now see the **login banner** with the
+   same code, URLs and an expiry countdown.
+4. Tap the direct link (or the URL + code) on that other device, sign in
+   to your Autodarts account, and approve the connection.
+5. The banner vanishes within a couple of seconds and the caller is
+   ready.
+
+> The web UI does **not** require an Autodarts login itself. Only the
+> caller's connection to autodarts.io does. The `/api/auth/status`
+> endpoint that powers the banner is intentionally public so the prompt
+> can be read before any other authentication happens.
+
+### Refreshing / re-login
+
+* The caller refreshes the access token in the background while it runs.
+* If the refresh token ever expires (after ~30 days of the caller being
+  off), the device-flow banner simply reappears the next time you
+  start the caller.
+* To force a fresh login, delete the token file:
+  - Linux/macOS: `rm ~/.config/darts-caller/tokens.json`
+  - Windows: delete `%USERPROFILE%\.config\darts-caller\tokens.json`
+
 ## 3.0.1.1
 - Changes Auth FLow to match the new Autodarts Procedure. **READ THE README FOR DETAILS**.
 - Changed startup flow for better headless UX: web server starts first, Autodarts login/bootstrap runs in background.
