@@ -1,4 +1,4 @@
-## 3.0.1.5
+## 3.0.1.6
 - Web Caller Ui changes:
   - Added "Start Board" and "Stop Board" buttons to the web UI for controlling the dartboard directly from the interface.
   - These buttons emit "board-start" and "board-stop" messages via WebSocket to trigger the corresponding actions in the caller.
