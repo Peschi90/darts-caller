@@ -1,3 +1,6 @@
+## 3.0.1.12
+- Implemented new internal websocket routine. 
+
 ## 3.0.1.11
 - Web Caller Ui changes:
   - Added "Start Board" and "Stop Board" buttons to the web UI for controlling the dartboard directly from the interface.
