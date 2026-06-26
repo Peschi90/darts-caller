@@ -1,5 +1,6 @@
-## 3.0.1.12
-- Implemented new internal websocket routine. 
+## 3.0.1.13
+- Implemented new internal websocket routine.
+- fixed websocket delay bug 
 
 ## 3.0.1.11
 - Web Caller Ui changes:
