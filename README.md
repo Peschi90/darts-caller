@@ -1,7 +1,7 @@
 # DARTS-CALLER
 [![Downloads](https://img.shields.io/github/downloads/Peschi90/darts-caller/total.svg)](https://github.com/Peschi90/darts-caller/releases/latest)
 
-Darts-caller plays back sound-files accordingly to the state of a https://autodarts.io game. Furthermore it acts as a central hub by forwarding game-events to connected clients like https://github.com/Peschi90/darts-extern that process incoming data to automate other dart-web-platforms like https://lidarts.org.
+Darts-caller plays back sound-files accordingly to the state of a https://atodarts.com game. Furthermore it acts as a central hub by forwarding game-events to connected clients like https://github.com/Peschi90/darts-extern that process incoming data to automate other dart-web-platforms like https://lidarts.org.
 
 Learn more about the [Features!](#workflow--functionality)
 
@@ -48,28 +48,6 @@ Learn more about the [Features!](#workflow--functionality)
 > Running darts-caller directly from source is no longer supported.
 > Due to the new authentication flow and repeated Autodarts Terms of Service violations,
 > source-based execution had to be discontinued.
-
-~~### By Source:~~
-~~> [!NOTE]~~
-~~> running by source i supported again since v2.19.0~~
-
-~~Setup python3~~
-
-~~- Download and install python 3.x.x for your specific os.~~
-
-
-~~#### Get the project~~
-
-~~    git clone https://github.com/Peschi90/darts-caller.git~~
-
-~~Go to download-directory and type:~~
-
-~~    pip3 install -r requirements.txt~~
-
-~~Optional for Linux: If you encounter problems local playback:~~
-
-~~    sudo apt-get install python3-sdl2~~
-
 
 ### Headless Linux: Start and Use the Release Binary
 
@@ -166,7 +144,7 @@ The following section elucidates the procedure and individual components of the 
 
 After launching the application, "voice-packs" are automatically downloaded. A voice-pack represents a specific speaker, comprised of a collection of audio files. These audio files can be accessed by the application to announce your scored points. The application features a wide variety of voice-packs, encompassing different languages and genders. 
 Due to the potentially lengthy process of downloading and extracting all voice-packs, the number of downloads is initially limited to a small selection of English-speaking speakers. However, you can lift this restriction. During the download phase, there is no calling functionality. Returning to the definition of a "voice-pack": it contains all the audio files necessary to ensure a complete "calling experience." Each audio file within it is named according to a specific schema, enabling the application to recognize the content (or intended content) based on the file name. For instance, the file "gameon.mp3" contains an audio track where the speaker announces the start of the game. If, hypothetically, this file were renamed "game.mp3," the application would fail to interpret it since the content association would be lost. "gameon" serves as a valid "sound-file-key," whereas "game" does not. The application is equipped with an extensive repertoire of valid [SOUND-FILE-KEYS](#SOUND-FILE-KEYS). 
-The available voice-packs for download are periodically expanded, such as with the addition of new audio files for player names (gathered separately through a process on autodarts.io). If you're interested in knowing how to ensure your player name is included in future voice-packs, please read the [rules](https://discord.com/channels/802528604067201055/1146376616264597647/1148254133963477044) on Discord and adjust your name accordingly.
+The available voice-packs for download are periodically expanded, such as with the addition of new audio files for player names (gathered separately through a process on atodarts.com). If you're interested in knowing how to ensure your player name is included in future voice-packs, please read the [rules](https://discord.com/channels/802528604067201055/1146376616264597647/1148254133963477044) on Discord and adjust your name accordingly.
 
 
 ### How can I add sounds to a voice-pack?
@@ -402,7 +380,7 @@ and is reused automatically.
 4. At the same time, the web UI shows a yellow banner with the exact
    same information — code, URL, direct link and the time left until the
    code expires.
-5. As soon as you approve the connection on autodarts.io, the banner
+5. As soon as you approve the connection on atodarts.com, the banner
    disappears, the caller fetches your user info, opens the Autodarts
    websocket, and starts working normally.
 
@@ -422,10 +400,10 @@ small home-server box.
    print something like:
 
        Connect darts-caller to your Autodarts account
-       https://autodarts.io/device
+       https://atodarts.com/link
        code   ABCD-1234
        …or open this direct link (code pre-filled):
-       https://autodarts.io/device?user_code=ABCD-1234
+       https://atodarts.com/link?user_code=ABCD-1234
 
 2. From **any** other device on your network — phone, laptop, tablet —
    open the caller's web UI:
@@ -442,7 +420,7 @@ small home-server box.
    ready.
 
 > The web UI does **not** require an Autodarts login itself. Only the
-> caller's connection to autodarts.io does. The `/api/auth/status`
+> caller's connection to atodarts.com does. The `/api/auth/status`
 > endpoint that powers the banner is intentionally public so the prompt
 > can be read before any other authentication happens.
 
@@ -502,17 +480,17 @@ Start the script:
 #### *`-U / --autodarts_email`*
 
 <p>**REQUIRED:** 
-Your autodarts.io registered email-address.</p>
+Your atodarts.com registered email-address.</p>
 
 #### *`-P / --autodarts_password`*
 
 <p>**REQUIRED:** 
-Your autodarts.io registered password. Make sure you disable 2FA (Two-Factor-Auth).</p>
+Your atodarts.com registered password. Make sure you disable 2FA (Two-Factor-Auth).</p>
 
 #### *`-B / --autodarts_board_id`*
 
 <p>**REQUIRED:** 
-Your autodarts.io registered board-id. You can find your Board-ID in Board-Manager.</p>
+Your atodarts.com registered board-id. You can find your Board-ID in Board-Manager.</p>
 
 #### *`-M / --media_path`*
 
